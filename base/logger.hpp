@@ -88,7 +88,7 @@ class Log {
     const char *func;
     int line;
     int ref;
-    log_content() : lm(NULL), ss(NULL), level(0), file(NULL), func(NULL), line(0), ref(1) {
+    log_content() : lm(nullptr), ss(nullptr), level(0), file(nullptr), func(nullptr), line(0), ref(1) {
     }
   };
 

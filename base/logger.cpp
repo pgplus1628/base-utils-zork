@@ -47,7 +47,7 @@ Log::Log(LogManager *lm_in, int level_in, const char *file_in, const char *func_
 
 template<typename T>
 Log& Log::operator<<(T a) {
-  if (lc->ss == NULL) {
+  if (lc->ss == nullptr) {
     lc->ss = new std::stringstream;
   }
   *(lc->ss) << a;
@@ -57,7 +57,7 @@ Log& Log::operator<<(T a) {
 
 
 Log& Log::operator<<(const char *a) {
-  if (lc->ss == NULL) {
+  if (lc->ss == nullptr) {
     lc->ss = new std::stringstream;
   }
 
@@ -91,7 +91,7 @@ void Log::log_file(const char *fmt, ...) {
 Log::~Log() {
   lc->ref --;
   if(lc->ref == 0) {
-    if (lc->ss != NULL) {
+    if (lc->ss != nullptr) {
       log_console("%s", lc->ss->str().c_str());
       delete lc->ss;
     }
