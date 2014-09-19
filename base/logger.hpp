@@ -5,6 +5,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <string>
+#include <assert.h>
 #include "misc.hpp"
 #include "debugging.hpp"
 
@@ -34,6 +35,7 @@
 #define LOG(lvl) \
   if (lvl >= ::base::global_lm().get_log_level()) ::base::log_dispatch<(lvl >= LL_OUTPUT)>::exec(lvl, __FILE__, __func__, __LINE__)
 
+#define LOG_DEBUG LOG(LL_DEBUG)
 #define LOG_INFO  LOG(LL_INFO)
 #define LOG_WARN  LOG(LL_WARN)
 #define LOG_ERROR LOG(LL_ERROR)
@@ -57,12 +59,16 @@
 
 #ifndef NDEBUG
 #define verify(inv) \
-  !(unlikely(!(inv))) ? void(0) : LOG(LL_FATAL) << \
-  "verify(" << (#inv) << ") failed at " << __FILE__ << " : " << __LINE__ << " in function " << __FUNCTION__
+do {        \
+  if (likely(inv)) {  \
+    LOG(LL_FATAL) << \
+    "verify(" << (#inv) << ") failed at " << __FILE__ << " : "  \
+    << __LINE__ << " in function " << __FUNCTION__ ; \
+  } \
+} while (0)
 #else 
 #define verify(inv) assert(inv)
-#endif  
-
+#endif  // NDEBUG
 
 namespace base {
 
@@ -99,8 +105,8 @@ class Log {
   template<typename T>  
   Log& operator<< (T a);
   Log& operator<< (const char *a);
-  void log_console(const char *fmt, ...);
-  void log_file(const char *fmt, ...);
+  Log& operator()(const char *fmt, ...);
+  void log_v(const char *fmt, va_list args);
   ~Log();
 
   private :
@@ -117,8 +123,6 @@ class Log {
   };
 
   struct log_content *lc;
-
-
 
 };
 
@@ -157,16 +161,15 @@ class LogManager {
   LogManager();
   void set_log_level(int lvl); /* soft log level, may change at run time */
   int get_log_level();
-  void set_log_to_console(bool ltc);
-  bool get_log_to_console();
-  
+  void set_outfile(FILE *out);
+ 
   Log new_log(int level, const char *file, const char *func, int line);
 
   private : 
   int log_level;
-  bool log_to_console;
-  std::string log_file;
-
+  FILE *log_fout;
+  
+  friend class Log;
 };
 
 template<bool dostuff>

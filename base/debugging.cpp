@@ -1,3 +1,5 @@
+#ifndef _DEBUGGING_HPP_
+#define _DEBUGGING_HPP_
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,7 +11,9 @@
 #include <utility>
 
 #include "debugging.hpp"
+#include "misc.hpp"
 
+using namespace std;
 namespace base {
 
 /* borrow code from 
