@@ -6,9 +6,9 @@
 #include <stdio.h>
 #include <string>
 #include "misc.hpp"
+#include "debugging.hpp"
 
-
-/* 
+/**
  * 1. Log output constraint ? 
  * log will output if and only if 
  *    * log_level >= LL_OUTPUT  : at compile time
@@ -38,6 +38,30 @@
 #define LOG_WARN  LOG(LL_WARN)
 #define LOG_ERROR LOG(LL_ERROR)
 #define LOG_FATAL LOG(LL_FATAL)
+
+
+#ifndef likely
+#define likely(x) __builtin_expect(!!(x), 1)
+#endif // likely
+
+
+#ifndef unlikely
+#define unlikely(x) __builtin_expect(!!(x), 0)
+#endif // unlikely
+
+
+/**
+ * Use assert() when the test is only intended for debugging.
+ * Use verify() when the test is crucial for both debug and release library.
+ */
+
+#ifndef NDEBUG
+#define verify(inv) \
+  !(unlikely(!(inv))) ? void(0) : LOG(LL_FATAL) << \
+  "verify(" << (#inv) << ") failed at " << __FILE__ << " : " << __LINE__ << " in function " << __FUNCTION__
+#else 
+#define verify(inv) assert(inv)
+#endif  
 
 
 namespace base {

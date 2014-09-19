@@ -76,9 +76,13 @@ void Log::log_console(const char *fmt, ...) {
   vprintf(fmt, va);
   printf("\n");
   pthread_mutex_unlock(&log_rmutex);
-   
+
   va_end(va);
 
+  if (lc->level == LL_FATAL) {
+    print_stack_trace();
+    ::abort();
+  }
 }
 
 
