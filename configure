@@ -1,0 +1,115 @@
+#!/bin/bash
+
+
+## ===================================================
+# Helper Functions
+
+function do_print_help {
+  echo "Usage: ./configure [--prefix=PREFIX] "
+  echo
+  echo "  --cleanup           remove all build directories"
+  echo
+  echo "  --prefix=[PREFIX]   base-utils installation target directory. Defaults to /usr/local"
+  echo
+  echo "  --no_tcmalloc       Disable using tcmalloc instead of malloc."
+  echo
+  echo "  -D var=value        Specify definitions to be passed on to cmake."
+
+  exit 1
+} # end do_print_help
+
+function do_distclean {
+  echo "rm -rf release debug"
+  rm -rf release/ debug/
+  exit 1
+} # end do_distclean
+
+function do_unknown_option {
+  echo "Unknow optino: $1"
+  echo "run ./configure --help to get help"
+  exit 1
+} # end do_unknown_option
+
+
+
+## ==================================================
+# Configurations
+RELEASE_DIR=build/release
+DEBUD_DIR=build/debug
+INSTALL_DIR=/usr/local
+NO_TCMALLOC=true
+CFLAGS=""
+CXX="g++"
+
+# Parse command line options
+while [$# -gt 0 ]
+  do case $1 in
+    --help)         print_help=1 ;;
+    --distclean)    distclean=1 ;;
+    --no_tcmalloc)  no_tcmalloc=1 ;;
+    --prefix=*)     prefix=${1##--prefix=} ;;
+    -D)             CFLAGS="$CFLAGS -D $2"; shift ;;
+    *)              do_unkown_options $1;;
+  esac
+  shift
+done
+
+if [ $print_hel ] ; then
+  do_print_help;
+fi
+
+if [ $distclean ] ; then
+  do_distclean;
+fi
+
+if [ $no_tcmalloc ] ; then
+  NO_TCMALLOC=true
+fi
+
+if [[ -n $prefix ]]; then
+  INSTALL_DIR=$prefix
+fi
+
+
+## ================================================
+# Setup cmake
+
+if [ -z `which cmake`] ; then
+  echo "CMake is not installed, please install the newest version of cmake."
+  echo "Cmake 2.8 or larger is required."
+  exit 1
+fi
+
+CMAKE="cmake"
+
+## ===============================================
+# Run cmake
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
