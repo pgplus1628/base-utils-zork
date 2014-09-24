@@ -14,13 +14,12 @@ function do_print_help {
   echo "  --no_tcmalloc       Disable using tcmalloc instead of malloc."
   echo
   echo "  -D var=value        Specify definitions to be passed on to cmake."
-
   exit 1
 } # end do_print_help
 
 function do_distclean {
-  echo "rm -rf release debug"
-  rm -rf release/ debug/
+  echo "rm -rf build/"
+  rm -rf build/
   exit 1
 } # end do_distclean
 
@@ -34,27 +33,28 @@ function do_unknown_option {
 
 ## ==================================================
 # Configurations
+PROJECT_HOME=$PWD
 RELEASE_DIR=build/release
-DEBUD_DIR=build/debug
+DEBUG_DIR=build/debug
 INSTALL_DIR=/usr/local
 NO_TCMALLOC=true
 CFLAGS=""
 CXX="g++"
 
 # Parse command line options
-while [$# -gt 0 ]
+while [ $# -gt 0 ]
   do case $1 in
     --help)         print_help=1 ;;
     --distclean)    distclean=1 ;;
     --no_tcmalloc)  no_tcmalloc=1 ;;
     --prefix=*)     prefix=${1##--prefix=} ;;
     -D)             CFLAGS="$CFLAGS -D $2"; shift ;;
-    *)              do_unkown_options $1;;
+    *)              do_unknown_option $1 ;;
   esac
   shift
 done
 
-if [ $print_hel ] ; then
+if [ $print_help ] ; then
   do_print_help;
 fi
 
@@ -74,7 +74,7 @@ fi
 ## ================================================
 # Setup cmake
 
-if [ -z `which cmake`] ; then
+if [ -z `which cmake` ] ; then
   echo "CMake is not installed, please install the newest version of cmake."
   echo "Cmake 2.8 or larger is required."
   exit 1
@@ -84,9 +84,39 @@ CMAKE="cmake"
 
 ## ===============================================
 # Run cmake
+set -e
+set -o pipefail
 
 
+echo -e "\n\n\n ===================== Release ==================="
+if [ ! -d $RELEASE_DIR ]; then
+  mkdir -p $RELEASE_DIR
+fi
 
+cd $RELEASE_DIR
+rm -f CMakeCache.txt
+bld_cmd="$CMAKE -D CMAKE_BUILD_TYPE=Release $CFLAGS ../../."
+echo $bld_cmd
+eval $bld_cmd
+cd $PROJECT_HOME
+
+echo -e "\n\n\n ==================== Debug ===================="
+if [ ! -d $DEBUG_DIR ]; then
+  mkdir $DEBUG_DIR
+fi
+cd $DEBUG_DIR
+rm -f CMakeCache.txt
+bld_cmd="$CMAKE -D CMAKE_BUILD_TYPE=Debug $CFLAGS ../../."
+echo $bld_cmd
+eval $bld_cmd
+cd $PROJECT_HOME
+
+
+echo "**************************************************"
+echo "*  cd build/release or build/debug               *"
+echo "*  make -j2                                      *"
+echo "*  to build the project                          *"
+echo "**************************************************"
 
 
 
