@@ -1,7 +1,7 @@
-project(base-utils)
+#project(base-utils)
 
 set(BASE_SRC_LIST misc.cpp debugging.cpp logger.cpp)
-set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
+#set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
 set(BASE_LIB baseutils_base)
 add_library(${BASE_LIB} STATIC ${BASE_SRC_LIST})
 

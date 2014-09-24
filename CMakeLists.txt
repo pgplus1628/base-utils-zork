@@ -104,6 +104,12 @@ endmacro(add_baseutils_executable)
 
 
 ## ===============================================================
+# Output paths
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
+
+## ===============================================================
 # Set subdirectories
 add_subdirectory(base)
 #add_subdirectory(parallel)
