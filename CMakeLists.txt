@@ -86,6 +86,7 @@ endif()
 # Set subdirectories
 add_subdirectory(base)
 #add_subdirectory(parallel)
+#add_subdirectory(test)
 
 
 

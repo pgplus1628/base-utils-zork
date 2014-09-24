@@ -6,7 +6,11 @@
 
 namespace base {
 
+#ifdef __APPLE__
+static pthread_mutex_t log_rmutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER;
+#else
 static pthread_mutex_t log_rmutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
+#endif
 
 const char *ll_header[LL_ALL]{
   "D",
