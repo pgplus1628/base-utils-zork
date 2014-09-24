@@ -13,6 +13,8 @@ function do_print_help {
   echo
   echo "  --no_tcmalloc       Disable using tcmalloc instead of malloc."
   echo
+  echo "  --build_testing     Build with testing(will set CMake BUILD_TESTING ON)."
+  echo 
   echo "  -D var=value        Specify definitions to be passed on to cmake."
   exit 1
 } # end do_print_help
@@ -38,6 +40,7 @@ RELEASE_DIR=build/release
 DEBUG_DIR=build/debug
 INSTALL_DIR=/usr/local
 NO_TCMALLOC=true
+BUILD_TESTING=OFF
 CFLAGS=""
 CXX="g++"
 
@@ -47,6 +50,7 @@ while [ $# -gt 0 ]
     --help)         print_help=1 ;;
     --distclean)    distclean=1 ;;
     --no_tcmalloc)  no_tcmalloc=1 ;;
+    --build_testing) build_testing=1 ;;
     --prefix=*)     prefix=${1##--prefix=} ;;
     -D)             CFLAGS="$CFLAGS -D $2"; shift ;;
     *)              do_unknown_option $1 ;;
@@ -66,9 +70,19 @@ if [ $no_tcmalloc ] ; then
   NO_TCMALLOC=true
 fi
 
+if [ $build_testing ] ; then
+  BUILD_TESTING=ON
+fi
+
 if [[ -n $prefix ]]; then
   INSTALL_DIR=$prefix
 fi
+
+
+# Add additional flags
+CFLAGS="$CFLAGS -D BUILD_TESTING=$BUILD_TESTING"  
+CFLAGS="$CFLAGS -D NO_TCMALLOC:BOOL=$NO_TCMALLOC"
+
 
 
 ## ================================================

@@ -1,8 +1,15 @@
 project(base-utils)
 
+## ==============================================================
+## Cmake environment settting
+
 # Require the most recent version of cmake
 cmake_minimum_required(VERSION 2.8)
 
+# Enable testing
+if(BUILD_TESTING)
+  enable_testing()
+endif(BUILD_TESTING)
 
 ## ==============================================================
 ## System Checks
@@ -81,12 +88,26 @@ else()
 endif()
 
 
+## ==============================================================
+# Helper macros
+# Dependent on base-utils/base
+macro(add_base_executable NAME)
+  add_executable(${NAME} ${ARGN})
+  target_link_libraries(${NAME} baseutils_base)
+  add_dependencies(${NAME} baseutils_base)
+  #TODO Core dependencies
+endmacro(add_baseutils_executable)
+
+#macro(add_parallel_executable NAME)
+#
+#endmacro(add_parallel_executable)
+
 
 ## ===============================================================
 # Set subdirectories
 add_subdirectory(base)
 #add_subdirectory(parallel)
-#add_subdirectory(test)
+add_subdirectory(test)
 
 
 
