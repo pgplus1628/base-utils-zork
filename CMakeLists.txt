@@ -96,7 +96,7 @@ macro(add_base_executable NAME)
   target_link_libraries(${NAME} baseutils_base)
   add_dependencies(${NAME} baseutils_base)
   #TODO Core dependencies
-endmacro(add_baseutils_executable)
+endmacro(add_base_executable)
 
 #macro(add_parallel_executable NAME)
 #
